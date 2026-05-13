@@ -2,10 +2,10 @@ package item;
 
 import character.GameCharacter;
 
-public class AttackPotion extends Item {
+public class Weapon extends Item {
 
-    public AttackPotion() {
-        super("공격력 포션", 20);
+    public Weapon() {
+        super("철 검", 10);
     }
 
     @Override

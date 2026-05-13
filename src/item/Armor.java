@@ -2,21 +2,22 @@ package item;
 
 import character.GameCharacter;
 
-public class HealPotion extends Item {
+public class Armor extends Item {
 
-    public HealPotion() {
-        super("체력 포션", 50);
+    public Armor() {
+        super("철 갑옷", 30);
     }
 
     @Override
     public String use(Object target) {
         GameCharacter character = (GameCharacter) target;
+        character.boostMaxHp(value);
         character.heal(value);
-        return character.getName() + "의 HP가 " + value + " 회복됐습니다!";
+        return character.getName() + "의 최대 HP가 " + value + " 증가했습니다!";
     }
 
     @Override
     public String getDescription() {
-        return "HP +" + value;
+        return "최대 HP +" + value;
     }
 }

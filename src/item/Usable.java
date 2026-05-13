@@ -1,6 +1,6 @@
 package item;
 
 public interface Usable {
-	void use(Object target);
-	String getDescription();
+    String use(Object target);  // void → String ui 구조화 위해
+    String getDescription();
 }
