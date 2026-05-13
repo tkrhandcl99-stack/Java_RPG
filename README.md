@@ -106,7 +106,17 @@
 
 ## 🖥️ 실행 화면
 
-> GIF 캡처 예정
+### 1. 게임 시작 + 스테이지 1
+![gameplay1](images/gameplay_1_stage1.gif)
+
+### 2. 히든 보스 + 스테이지 2~3
+![gameplay2](images/gameplay_2_hidden_boss.gif)
+
+### 3. 인벤토리 예외처리
+![gameplay3](images/gameplay_3_exception.gif)
+
+### 4. 보스 클리어
+![gameplay4](images/gameplay_4_clear.gif)
 
 ---
 
