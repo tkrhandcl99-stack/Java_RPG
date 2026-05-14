@@ -19,6 +19,9 @@ import item.AttackPotion;
 import item.Weapon;
 import item.Armor;
 import item.MithrilGlove;
+import item.LargeHealPotion;
+import item.WoodenSword;
+import item.ClothArmor;
 
 public class BattlePanel extends JPanel {
 
@@ -28,7 +31,8 @@ public class BattlePanel extends JPanel {
     private Inventory inventory;
     private ArrayList<Monster> currentMonsters;
     private int currentStage = 1;
-    private boolean stageChanged = false; // 스테이지 변경 여부 플래그
+    private boolean stageChanged = false;
+    private MonsterBook monsterBook = new MonsterBook();
 
     // UI 컴포넌트
     private JLabel playerStatus;
@@ -36,6 +40,7 @@ public class BattlePanel extends JPanel {
     private JPanel monsterPanel;
     private JButton attackBtn, skillBtn, itemBtn, statusBtn;
 
+    // 기본 생성자 - 스테이지 1부터 시작
     public BattlePanel(GameFrame frame, GameCharacter player, boolean isEasy) {
         this.frame = frame;
         this.player = player;
@@ -43,12 +48,30 @@ public class BattlePanel extends JPanel {
 
         logArea = new JTextArea();
 
-        // 인벤토리 세팅
         this.inventory = new Inventory();
         log(inventory.addItem(new HealPotion()));
         log(inventory.addItem(new HealPotion()));
         log(inventory.addItem(new AttackPotion()));
 
+        initUI();
+        startStage(1);
+    }
+
+    // 상점에서 돌아올 때 쓰는 생성자
+    public BattlePanel(GameFrame frame, GameCharacter player, boolean isEasy, Inventory inventory, int startStage) {
+        this.frame = frame;
+        this.player = player;
+        this.isEasy = isEasy;
+        this.inventory = inventory;
+
+        logArea = new JTextArea();
+
+        initUI();
+        startStage(startStage);
+    }
+
+    // UI 초기화 공통 메서드
+    private void initUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(30, 30, 30));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -104,9 +127,6 @@ public class BattlePanel extends JPanel {
         btnPanel.add(itemBtn);
         btnPanel.add(statusBtn);
         add(btnPanel, BorderLayout.SOUTH);
-
-        // 스테이지 1 시작
-        startStage(1);
     }
 
     private JButton createButton(String text, Color color) {
@@ -118,7 +138,6 @@ public class BattlePanel extends JPanel {
         return btn;
     }
 
-    // 스테이지 시작 - stageChanged 플래그 설정
     private void startStage(int stage) {
         stageChanged = true;
         currentStage = stage;
@@ -137,10 +156,8 @@ public class BattlePanel extends JPanel {
                     log("야생의 이재원의 기습! 조심하세요!");
                     WildJaewon jaewon = new WildJaewon();
                     currentMonsters.add(jaewon);
-                    // 기습 공격 실제로 적용
                     jaewon.attack(player);
                     log("야생의 이재원의 빠따질! " + jaewon.getAttackPower() + " 데미지! 남은 HP: " + player.getHp());
-                    // 기습으로 죽었을 경우 체크
                     if (!player.isAlive()) {
                         setButtonsEnabled(false);
                         int result = JOptionPane.showConfirmDialog(
@@ -208,7 +225,6 @@ public class BattlePanel extends JPanel {
         }
     }
 
-    // 살아있는 몬스터만 반환
     private ArrayList<Monster> getAliveMonsters() {
         ArrayList<Monster> alive = new ArrayList<>();
         for (Monster m : currentMonsters) {
@@ -239,6 +255,7 @@ public class BattlePanel extends JPanel {
         log(player.toString());
         log(player.showStatus());
         log(player.showEquipped());
+        log(monsterBook.show());
         log("===================");
     }
 
@@ -249,15 +266,21 @@ public class BattlePanel extends JPanel {
             return;
         }
 
-        stageChanged = false; // 공격 시작 전 초기화
+        stageChanged = false;
         String attackMsg = getPlayerAttackMessage(monster);
         player.attack(monster);
         log(attackMsg);
         log(monster.getName() + " 남은 HP: " + monster.getHp());
 
-        checkMonsterDead(monster);
+        // 궁수 패시브
+        if (player instanceof Archer && ((Archer) player).isDoubleAttack() && monster.isAlive()) {
+            log("[ 패시브 발동! 연속 공격! ]");
+            player.attack(monster);
+            log(getPlayerAttackMessage(monster));
+            log(monster.getName() + " 남은 HP: " + monster.getHp());
+        }
 
-        // 스테이지 안 바뀌고 클리어 안됐고 플레이어 살아있을 때만 반격
+        checkMonsterDead(monster);
         if (!stageChanged && !allMonstersDead() && player.isAlive()) {
             monsterTurn();
         }
@@ -271,7 +294,7 @@ public class BattlePanel extends JPanel {
             return;
         }
 
-        stageChanged = false; // 스킬 시작 전 초기화
+        stageChanged = false;
 
         if (player instanceof Warrior) {
             if (!player.useMp(10)) {
@@ -296,9 +319,21 @@ public class BattlePanel extends JPanel {
         log(getPlayerSkillMessage(monster));
         log(monster.getName() + " 남은 HP: " + monster.getHp());
 
-        checkMonsterDead(monster);
+        // 궁수 패시브 스킬
+        if (player instanceof Archer && ((Archer) player).isDoubleAttack() && monster.isAlive()) {
+            log("[ 패시브 발동! 연속 스킬! ]");
+            ((Archer) player).rapidShot(monster);
+            log(getPlayerSkillMessage(monster));
+            log(monster.getName() + " 남은 HP: " + monster.getHp());
+        }
 
-        // 스테이지 안 바뀌고 클리어 안됐고 플레이어 살아있을 때만 반격
+        // 마법사 패시브
+        if (player instanceof Mage) {
+            ((Mage) player).recoverMpPassive();
+            log("[ 패시브 발동! MP 10 회복! ]");
+        }
+
+        checkMonsterDead(monster);
         if (!stageChanged && !allMonstersDead() && player.isAlive()) {
             monsterTurn();
         }
@@ -308,10 +343,10 @@ public class BattlePanel extends JPanel {
     private void checkMonsterDead(Monster monster) {
         if (!monster.isAlive()) {
             log(monster.getName() + "을(를) 처치했습니다!");
-            log(giveExp(monster));
+            monsterBook.record(monster.getName());
+            log(giveRewards(monster));
         }
         if (allMonstersDead()) {
-            // 몬스터 전부 처치 시 포션 지급
             if (currentStage != 4) {
                 if (inventory.isFull()) {
                     log("인벤토리가 가득 차 체력 포션을 받을 수 없습니다!");
@@ -323,17 +358,34 @@ public class BattlePanel extends JPanel {
         }
     }
 
-    private String giveExp(Monster monster) {
-        if (monster instanceof Goblin) return player.gainExp(((Goblin) monster).getExpDrop());
-        else if (monster instanceof Dragon) return player.gainExp(((Dragon) monster).getExpDrop());
-        else if (monster instanceof WildJaewon) {
-            String expMsg = player.gainExp(((WildJaewon) monster).getExpDrop());
+    private String giveRewards(Monster monster) {
+        String expMsg = "";
+        int gold = 0;
+
+        if (monster instanceof Goblin) {
+            expMsg = player.gainExp(((Goblin) monster).getExpDrop());
+            gold = ((Goblin) monster).getGoldDrop();
+        } else if (monster instanceof Dragon) {
+            expMsg = player.gainExp(((Dragon) monster).getExpDrop());
+            gold = ((Dragon) monster).getGoldDrop();
+        } else if (monster instanceof WildJaewon) {
+            expMsg = player.gainExp(((WildJaewon) monster).getExpDrop());
+            gold = ((WildJaewon) monster).getGoldDrop();
             log(expMsg);
+            log("골드 " + gold + "G 획득!");
+            player.addGold(gold);
             return equipMithrilGlove();
+        } else if (monster instanceof TreeGuard) {
+            expMsg = player.gainExp(((TreeGuard) monster).getExpDrop());
+            gold = ((TreeGuard) monster).getGoldDrop();
+        } else if (monster instanceof DarkKnight) {
+            expMsg = player.gainExp(((DarkKnight) monster).getExpDrop());
+            gold = ((DarkKnight) monster).getGoldDrop();
         }
-        else if (monster instanceof TreeGuard) return player.gainExp(((TreeGuard) monster).getExpDrop());
-        else if (monster instanceof DarkKnight) return player.gainExp(((DarkKnight) monster).getExpDrop());
-        return "";
+
+        player.addGold(gold);
+        log("골드 " + gold + "G 획득!");
+        return expMsg;
     }
 
     private String equipMithrilGlove() {
@@ -351,10 +403,16 @@ public class BattlePanel extends JPanel {
         for (Monster monster : currentMonsters) {
             if (monster.isAlive() && player.isAlive()) {
                 String attackMsg = getMonsterAttackMessage(monster);
+
+                // 전사 패시브
+                if (player instanceof Warrior && ((Warrior) player).isDefend()) {
+                    log("[ 패시브 발동! 공격 무효화! ]");
+                    continue;
+                }
+
                 monster.attack(player);
                 log(attackMsg + " 남은 HP: " + player.getHp());
 
-                // 독 상태이상 부여 체크 (고블린)
                 if (monster instanceof Goblin) {
                     if (Math.random() < 0.15) {
                         log(player.addStatus("독"));
@@ -367,9 +425,25 @@ public class BattlePanel extends JPanel {
 
         if (!player.isAlive()) {
             setButtonsEnabled(false);
+
+            String message = "<html><div style='text-align:center;'>"
+                + "===== 게임 오버 =====<br><br>"
+                + "[ 최종 스탯 ]<br>"
+                + player.toString() + "<br><br>"
+                + "[ 도달한 스테이지 ]<br>"
+                + "스테이지 " + currentStage + "<br><br>"
+                + "[ 장착 장비 ]<br>"
+                + player.showEquipped().replace("\n", "<br>") + "<br><br>"
+                + "[ 몬스터 도감 ]<br>"
+                + monsterBook.show().replace("\n", "<br>") + "<br><br>"
+                + "다시 도전하시겠습니까?"
+                + "</div></html>";
+
             int result = JOptionPane.showConfirmDialog(
-                this, "쓰러졌습니다! 다시 도전하시겠습니까?", "게임 오버",
-                JOptionPane.YES_NO_OPTION);
+                this, new JLabel(message), "게임 오버",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
             if (result == JOptionPane.YES_OPTION) {
                 player.heal(player.getMaxHp() / 2);
                 log("체력을 " + player.getMaxHp() / 2 + " 회복하고 재도전합니다!");
@@ -381,23 +455,31 @@ public class BattlePanel extends JPanel {
         }
     }
 
-    // 몬스터 공격 메시지 직접 생성
     private String getMonsterAttackMessage(Monster monster) {
         if (monster instanceof Goblin) {
             return monster.getName() + "의 할퀴기! " + monster.getAttackPower() + " 데미지!";
         } else if (monster instanceof Dragon) {
-            return monster.getName() + "의 화염 브레스! " + monster.getAttackPower() + " 데미지!";
+            Dragon dragon = (Dragon) monster;
+            if (dragon.isStrongAttack()) {
+                return monster.getName() + "의 불꽃 폭풍! " + (monster.getAttackPower() + 20) + " 데미지! 강력한 공격!";
+            } else {
+                return monster.getName() + "의 화염 브레스! " + monster.getAttackPower() + " 데미지!";
+            }
         } else if (monster instanceof TreeGuard) {
             return monster.getName() + "의 나무 주먹! " + monster.getAttackPower() + " 데미지!";
         } else if (monster instanceof DarkKnight) {
-            return monster.getName() + "의 암흑 검격! " + monster.getAttackPower() + " 데미지!";
+            DarkKnight dk = (DarkKnight) monster;
+            if (dk.isStrongAttack()) {
+                return monster.getName() + "의 암흑 폭발! " + (monster.getAttackPower() + 15) + " 데미지! 강력한 공격!";
+            } else {
+                return monster.getName() + "의 암흑 검격! " + monster.getAttackPower() + " 데미지!";
+            }
         } else if (monster instanceof WildJaewon) {
             return monster.getName() + "의 빠따질! " + monster.getAttackPower() + " 데미지!";
         }
         return monster.getName() + "의 공격! " + monster.getAttackPower() + " 데미지!";
     }
 
-    // 플레이어 공격 메시지 직접 생성
     private String getPlayerAttackMessage(Monster monster) {
         if (player instanceof Warrior) {
             return player.getName() + "의 검 공격! " + player.getAttackPower() + " 데미지!";
@@ -409,7 +491,6 @@ public class BattlePanel extends JPanel {
         return player.getName() + "의 공격! " + player.getAttackPower() + " 데미지!";
     }
 
-    // 플레이어 스킬 메시지 직접 생성
     private String getPlayerSkillMessage(Monster monster) {
         if (player instanceof Warrior) {
             return player.getName() + "의 방패 가격! " + (player.getAttackPower() + 15) + " 데미지!";
@@ -434,14 +515,23 @@ public class BattlePanel extends JPanel {
         log(dropEquipment());
 
         if (currentStage == 4) {
+            String clearMessage = "<html><div style='text-align:center;'>"
+                + "🎉 게임 클리어! 🎉<br><br>"
+                + "[ 최종 스탯 ]<br>"
+                + player.toString() + "<br><br>"
+                + "[ 장착 장비 ]<br>"
+                + player.showEquipped().replace("\n", "<br>") + "<br><br>"
+                + "[ 몬스터 도감 ]<br>"
+                + monsterBook.show().replace("\n", "<br>")
+                + "</div></html>";
+
             JOptionPane.showMessageDialog(this,
-                "게임 클리어!\n\n" + player.toString() + "\n" + player.showEquipped(),
-                "축하합니다!", JOptionPane.INFORMATION_MESSAGE);
+                new JLabel(clearMessage), "축하합니다!",
+                JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
-        // 스테이지 클리어 후 선택지
-        String[] options = {"휴식 (HP +30, MP 풀회복)", "수련 (공격력 +5)", "이전 스테이지 재도전"};
+        String[] options = {"휴식 (HP +30, MP 풀회복)", "수련 (공격력 +5)", "이전 스테이지 재도전", "상점"};
         String choice = (String) JOptionPane.showInputDialog(
             this, "다음 행동을 선택하세요.", "스테이지 클리어!",
             JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -456,11 +546,19 @@ public class BattlePanel extends JPanel {
                 player.boostAttack(5);
                 log("수련 완료! 공격력 +5!");
                 startStage(currentStage + 1);
+            } else if (choice.contains("상점")) {
+                showShop();
             } else {
-                // 이전 스테이지 재도전 - 포션 지급 없이 바로 재도전
                 startStage(currentStage);
             }
         }
+    }
+
+    private void showShop() {
+        ShopPanel shopPanel = new ShopPanel(player, inventory, currentStage + 1, isEasy, frame);
+        frame.setContentPane(shopPanel);
+        frame.revalidate();
+        frame.repaint();
     }
 
     private String dropEquipment() {

@@ -12,6 +12,7 @@ public class TreeGuard extends Monster {
     public void attack(GameCharacter target) {
         target.takeDamage(attackPower);
     }
-
+    
+    public int getGoldDrop() { return 20; }
     public int getExpDrop() { return 25; }
 }

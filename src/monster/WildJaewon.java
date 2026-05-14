@@ -13,5 +13,6 @@ public class WildJaewon extends Monster {
         target.takeDamage(attackPower);
     }
 
+    public int getGoldDrop() { return 50; }
     public int getExpDrop() { return 40; }
 }

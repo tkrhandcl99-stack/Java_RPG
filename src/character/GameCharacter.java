@@ -14,6 +14,7 @@ public abstract class GameCharacter implements Attackable {
 	protected int level;
 	protected int exp;
 	protected int expToLevelUp;
+	protected int gold;
 	protected boolean alive;
 	protected HashSet<String> statusEffects;
 	protected HashMap<String, Item> equippedItems;
@@ -28,6 +29,7 @@ public abstract class GameCharacter implements Attackable {
 		this.maxMp = mp;
 		this.level = 1;
 		this.exp = 0;
+		this.gold = 0;
 		this.expToLevelUp = 30;
 		this.statusEffects = new HashSet<>();
 		this.equippedItems = new HashMap<>();
@@ -165,6 +167,21 @@ public abstract class GameCharacter implements Attackable {
 		this.attackPower += amount;
 	}
 	
+	// 골드 획득
+	public void addGold(int amount) {
+	    this.gold += amount;
+	}
+
+	// 골드 소모
+	public boolean spendGold(int amount) {
+	    if (this.gold < amount) {
+	        return false;
+	    }
+	    this.gold -= amount;
+	    return true;
+	}
+
+	public int getGold() { return gold; }
 	public boolean isAlive() { return alive; }
 	public String getName() { return name; }
 	public int getHp() { return hp; }
@@ -180,10 +197,11 @@ public abstract class GameCharacter implements Attackable {
 	
 	@Override
 	public String toString() {
-		return name + " Lv." + level +
-			   " [HP: " + hp + "/" + maxHp + "]" +
-			   " [MP: " + mp + "/" + maxMp + "]" +
-			   " [공격력: " + attackPower + "]" +
-			   " [EXP: " + exp + "/" + expToLevelUp + "]";
+	    return name + " Lv." + level +
+	           " [HP: " + hp + "/" + maxHp + "]" +
+	           " [MP: " + mp + "/" + maxMp + "]" +
+	           " [공격력: " + attackPower + "]" +
+	           " [EXP: " + exp + "/" + expToLevelUp + "]" +
+	           " [골드: " + gold + "G]";  // ← 추가
 	}
 }

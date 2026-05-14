@@ -118,6 +118,32 @@ public class StartPanel extends JPanel {
 
         add(centerPanel, BorderLayout.CENTER);
     }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // 배경 이미지 불러오기
+        try {
+            java.io.File imgFile = new java.io.File("images/background.jpg");
+            if (imgFile.exists()) {
+                java.awt.image.BufferedImage bg = javax.imageio.ImageIO.read(imgFile);
+                g2d.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+            }
+        } catch (Exception e) {
+            // 이미지 없으면 기존 그라디언트 배경
+            GradientPaint gp = new GradientPaint(
+                0, 0, new Color(5, 5, 20),
+                0, getHeight(), new Color(20, 20, 50));
+            g2d.setPaint(gp);
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // 어두운 오버레이 추가 (글자 잘 보이게)
+        g2d.setColor(new Color(0, 0, 0, 100));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+    }
 
     private void styleRadioButton(JRadioButton btn) {
         btn.setForeground(Color.WHITE);

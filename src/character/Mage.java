@@ -19,4 +19,9 @@ public class Mage extends GameCharacter {
         int skillDamage = attackPower + 15;
         enemy.takeDamage(skillDamage);
     }
+    
+    public void recoverMpPassive() {
+        this.mp += 10;
+        if (this.mp > this.maxMp) this.mp = this.maxMp;
+    }
 }

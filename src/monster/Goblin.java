@@ -20,6 +20,6 @@ public class Goblin extends Monster {
     public void attack(GameCharacter target) {
         target.takeDamage(attackPower);
     }
-
+    public int getGoldDrop() { return 10; }
     public int getExpDrop() { return 15; }
 }
