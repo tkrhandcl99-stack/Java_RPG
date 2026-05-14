@@ -253,7 +253,6 @@ public BattlePanel(GameFrame frame, GameCharacter player,
 1. **세이브 기능** - 게임 진행 저장/불러오기
 2. **스테이지 추가** - 더 다양한 몬스터와 보스
 3. **장비 강화 시스템** - 골드로 장비 강화 가능
-4. **멀티플레이** - 소켓 통신 기반 협동 플레이
 
 ---
 
