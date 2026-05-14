@@ -15,6 +15,7 @@ public class ShopPanel extends JPanel {
     private int nextStage;
     private boolean isEasy;
     private GameFrame frame;
+    private MonsterBook monsterBook;
 
     private String[][] shopItems = {
         {"체력 포션",     "HP +50",       "30",  "소모"},
@@ -27,12 +28,13 @@ public class ShopPanel extends JPanel {
         {"미스릴 장갑",   "공격력 +30",    "150", "장갑"}
     };
 
-    public ShopPanel(GameCharacter player, Inventory inventory, int nextStage, boolean isEasy, GameFrame frame) {
+    public ShopPanel(GameCharacter player, Inventory inventory, int nextStage, boolean isEasy, GameFrame frame, MonsterBook monsterBook) {
         this.player = player;
         this.inventory = inventory;
         this.nextStage = nextStage;
         this.isEasy = isEasy;
         this.frame = frame;
+        this.monsterBook = monsterBook;
 
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(30, 30, 30));
@@ -117,7 +119,7 @@ public class ShopPanel extends JPanel {
     }
 
     private void goNextStage() {
-        BattlePanel battlePanel = new BattlePanel(frame, player, isEasy, inventory, nextStage);
+        BattlePanel battlePanel = new BattlePanel(frame, player, isEasy, inventory, nextStage, monsterBook);
         frame.setContentPane(battlePanel);
         frame.revalidate();
         frame.repaint();

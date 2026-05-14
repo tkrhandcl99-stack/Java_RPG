@@ -32,7 +32,7 @@ public class BattlePanel extends JPanel {
     private ArrayList<Monster> currentMonsters;
     private int currentStage = 1;
     private boolean stageChanged = false;
-    private MonsterBook monsterBook = new MonsterBook();
+    private MonsterBook monsterBook;
 
     // UI 컴포넌트
     private JLabel playerStatus;
@@ -45,6 +45,7 @@ public class BattlePanel extends JPanel {
         this.frame = frame;
         this.player = player;
         this.isEasy = isEasy;
+        this.monsterBook = new MonsterBook(); // ← 새로 생성
 
         logArea = new JTextArea();
 
@@ -58,11 +59,12 @@ public class BattlePanel extends JPanel {
     }
 
     // 상점에서 돌아올 때 쓰는 생성자
-    public BattlePanel(GameFrame frame, GameCharacter player, boolean isEasy, Inventory inventory, int startStage) {
+    public BattlePanel(GameFrame frame, GameCharacter player, boolean isEasy, Inventory inventory, int startStage, MonsterBook monsterBook) {
         this.frame = frame;
         this.player = player;
         this.isEasy = isEasy;
         this.inventory = inventory;
+        this.monsterBook = monsterBook; // ← 기존 도감 유지
 
         logArea = new JTextArea();
 
@@ -554,8 +556,9 @@ public class BattlePanel extends JPanel {
         }
     }
 
+    // 상점 열기 - monsterBook 전달
     private void showShop() {
-        ShopPanel shopPanel = new ShopPanel(player, inventory, currentStage + 1, isEasy, frame);
+        ShopPanel shopPanel = new ShopPanel(player, inventory, currentStage + 1, isEasy, frame, monsterBook);
         frame.setContentPane(shopPanel);
         frame.revalidate();
         frame.repaint();
