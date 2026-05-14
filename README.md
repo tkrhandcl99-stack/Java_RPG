@@ -10,6 +10,7 @@
 |------|------|
 | 언어 / 기술 | Java 100% (Swing, 컬렉션 프레임워크, 상속, 인터페이스, 예외 처리) |
 | 개발 형태 | 개인 프로젝트 |
+| 개발 기간 | 월요일 ~ 목요일 (4일) |
 
 ---
 
@@ -29,6 +30,20 @@
 - GUI: Swing (JFrame, JPanel, JButton, JTextArea 등)
 - 데이터 관리: ArrayList, HashSet, HashMap
 - 핵심 개념: 상속(extends), 인터페이스(implements), 예외처리(try-catch), 추상클래스
+
+---
+
+## 📁 패키지 구조
+
+```
+src/
+├── character/   ← GameCharacter, Warrior, Mage, Archer
+├── monster/     ← Monster, Goblin, Dragon 등
+├── item/        ← Item, HealPotion, Weapon 등
+├── inventory/   ← Inventory
+├── exception/   ← 커스텀 예외 클래스
+└── main/        ← Main, GameFrame, BattlePanel, ShopPanel 등
+```
 
 ---
 
@@ -52,6 +67,18 @@
 | 14 | 몬스터 도감 | 처치한 몬스터 및 처치 횟수 기록 |
 | 15 | 스테이지 클리어 선택지 | 휴식 / 수련 / 이전 스테이지 재도전 / 상점 |
 | 16 | 재도전 시스템 | 사망 시 최종 스탯 확인 후 재도전 여부 선택 가능 |
+
+---
+
+## 👾 몬스터 정보
+
+| 몬스터     | HP  | 공격력 | 경험치 | 골드 | 특이사항 |
+|------------|-----|--------|--------|------|---------|
+| Goblin     | 60  | 15     | 15     | 10G  | 15% 확률 독 부여 |
+| TreeGuard  | 120 | 30     | 25     | 20G  | - |
+| WildJaewon | 50  | 60     | 40     | 50G  | 기습 공격, 미스릴 장갑 드랍 |
+| DarkKnight | 180 | 35     | 35     | 30G  | 40% 암흑폭발 패턴 |
+| Dragon     | 350 | 45     | 30     | 100G | 40% 불꽃폭풍 패턴 |
 
 ---
 
@@ -119,7 +146,7 @@
 ![gameplay1](images/gameplay_1_start_stage1.gif)
 
 ### 2. 히든 보스 + 스테이지 2~3
-![gameplay2](images/gameplay_2_hidden.boss.gif)
+![gameplay2](images/gameplay_2_hidden_boss.gif)
 
 ### 3. 상점 시스템 + 골드
 ![gameplay3](images/gameplay_3_shop.gif)
