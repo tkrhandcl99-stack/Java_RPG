@@ -10,7 +10,6 @@
 |------|------|
 | 언어 / 기술 | Java 100% (Swing, 컬렉션 프레임워크, 상속, 인터페이스, 예외 처리) |
 | 개발 형태 | 개인 프로젝트 |
-| DB 사용 여부 | 미사용 |
 
 ---
 
@@ -117,16 +116,19 @@
 ## 🖥️ 실행 화면
 
 ### 1. 게임 시작 + 스테이지 1
-![gameplay1](images/gameplay_1_stage1.gif)
+![gameplay1](images/gameplay_1_start_stage1.gif)
 
 ### 2. 히든 보스 + 스테이지 2~3
 ![gameplay2](images/gameplay_2_hidden_boss.gif)
 
-### 3. 인벤토리 예외처리
-![gameplay3](images/gameplay_3_exception.gif)
+### 3. 상점 시스템 + 골드
+![gameplay3](images/gameplay_3_shop.gif)
 
-### 4. 보스 클리어
-![gameplay4](images/gameplay_4_clear.gif)
+### 4. 예외처리
+![gameplay4](images/gameplay_4_exception.gif)
+
+### 5. 보스 클리어
+![gameplay5](images/gameplay_5_clear.gif)
 
 ---
 
