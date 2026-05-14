@@ -213,7 +213,7 @@ public BattlePanel(GameFrame frame, GameCharacter player,
 ## 🖥️ 실행 화면
 
 ### 1. 게임 시작 + 스테이지 1
-> 주요 클래스: `GameFrame` `StartPanel` `BattlePanel` `Goblin` `Inventory`
+> 주요 클래스: `GameFrame` `StartPanel` `BattlePanel` `Goblin`
 
 ![gameplay1](images/gameplay_1_start_stage1.gif)
 
@@ -223,12 +223,12 @@ public BattlePanel(GameFrame frame, GameCharacter player,
 ![gameplay2](images/gameplay_2_hidden_boss.gif)
 
 ### 3. 상점 시스템 + 골드
-> 주요 클래스: `ShopPanel` `MonsterBook` `Weapon` `Armor` `GameCharacter`
+> 주요 클래스: `ShopPanel` `Weapon` `Armor` `GameCharacter`
 
 ![gameplay3](images/gameplay_3_shop.gif)
 
 ### 4. 예외처리
-> 주요 클래스: `InventoryFullException` `InvalidTargetException` `Inventory`
+> 주요 클래스: `InventoryFullException` `InvalidTargetException`
 
 ![gameplay4](images/gameplay_4_exception.gif)
 
