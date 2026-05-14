@@ -220,7 +220,7 @@ public BattlePanel(GameFrame frame, GameCharacter player,
 ### 2. 히든 보스 + 스테이지 2~3
 > 주요 클래스: `WildJaewon` `TreeGuard` `DarkKnight` `MithrilGlove`
 
-![gameplay2](images/gameplay_2_hidden.boss.gif)
+![gameplay2](images/gameplay_2_hidden_boss.gif)
 
 ### 3. 상점 시스템 + 골드
 > 주요 클래스: `ShopPanel` `MonsterBook` `Weapon` `Armor` `GameCharacter`
