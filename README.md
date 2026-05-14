@@ -119,7 +119,7 @@
 ![gameplay1](images/gameplay_1_start_stage1.gif)
 
 ### 2. 히든 보스 + 스테이지 2~3
-![gameplay2](images/gameplay_2_hidden_boss.gif)
+![gameplay2](images/gameplay_2_hidden.boss.gif)
 
 ### 3. 상점 시스템 + 골드
 ![gameplay3](images/gameplay_3_shop.gif)
