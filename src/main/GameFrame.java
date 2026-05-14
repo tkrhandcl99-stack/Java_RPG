@@ -6,7 +6,7 @@ import java.awt.*;
 public class GameFrame extends JFrame {
 
     public GameFrame() {
-        setTitle("콘솔 RPG 게임");
+        setTitle("Java RPG");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);

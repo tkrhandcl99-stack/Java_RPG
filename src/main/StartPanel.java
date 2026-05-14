@@ -20,7 +20,7 @@ public class StartPanel extends JPanel {
         setBackground(new Color(30, 30, 30));
 
         // 타이틀
-        JLabel title = new JLabel("콘솔 RPG 게임", SwingConstants.CENTER);
+        JLabel title = new JLabel("Java RPG", SwingConstants.CENTER);
         title.setFont(new Font("맑은 고딕", Font.BOLD, 36));
         title.setForeground(Color.YELLOW);
         title.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
